@@ -1,48 +1,41 @@
 # Multi-functional AI Investment Assistant — project webpage
 
-One HTML/CSS website, with a small PHP wrapper for WordPress. No frontend framework or JavaScript is required.
+A standalone page and a paste-ready WordPress Custom HTML block. All CSS is inline; no plugin, JavaScript, external stylesheet, or WordPress Additional CSS access is needed.
 
-## Structure
+## Files
 
-```text
-fyp_website/
-├── index.html                 # All page content; edit this file
-├── styles.css                 # All page styles; edit this file
-├── package_wordpress.py       # Creates the WordPress installation ZIP
-├── wordpress/
-│   ├── fyp-project-page.php   # PHP shortcode wrapper
-│   └── fyp-project-page.zip   # Generated installation package
-└── README.md
-```
+- `index.html`: source of truth, with content and inline styles. Open it in a browser to preview.
+- `package_wordpress.py`: validates and exports the body of the page using Python's standard library.
+- `wordpress/custom-html.html`: generated fragment to paste into WordPress. Do not paste the standalone `index.html`, which includes document-level tags.
 
-`index.html` and `styles.css` are the single source for the webpage. The ZIP packages that same page for WordPress; it is not a separate implementation.
+## Deploy to the school WordPress site
 
-## Preview and edit
+1. Open `wordpress/custom-html.html` in a text editor and copy its entire contents.
+2. Edit the destination WordPress page and add a **Custom HTML** block. Replace the old Shortcode block if one was added.
+3. Paste the copied HTML into the block. Choose a full-width page template if the theme provides one.
+4. Save the page, reload the editor, and preview the saved page on desktop and mobile. Check navigation links and expand/collapse the methods sections.
 
-Open `index.html` in a browser. Edit the text in `index.html` and the layout in `styles.css`. Update the footer date when changing the content.
+WordPress permissions can filter inline CSS properties and HTML elements when saving. The school's exact restrictions have not been verified. If the saved layout differs from the local preview, inspect the saved block to see which attributes or elements were removed. A theme's content width and styles can also affect the result; the block cannot change the site's surrounding header or page template. This approach needs the editor to retain the inline styles used by the page.
 
-After editing, regenerate the WordPress package:
+## Edit and regenerate
+
+Edit the content or `style` attributes directly in `index.html`, then run:
 
 ```sh
 python3 package_wordpress.py
 ```
 
-Python is used only for packaging; the deployed site requires no Python installation.
+Update the footer date when changing the content. Copy the regenerated `wordpress/custom-html.html` into the same Custom HTML block and save again. Python is used only for exporting, never on WordPress.
 
-## Deploy to WordPress
+The exporter checks for unsupported document tags, missing inline styles, unresolved CSS variables, duplicate IDs, and broken internal navigation/accessibility labels. There is no plugin ZIP or PHP wrapper to install.
 
-1. Upload `wordpress/fyp-project-page.zip` through **Plugins → Add New → Upload Plugin**, then activate it.
-2. Create a page and add a Shortcode block containing `[fyp_project_page]`.
-3. Select a full-width page template if available, and preview on desktop and mobile.
+## Layout and interaction
 
-This requires permission to install a plugin on the school's WordPress site. The PHP wrapper displays the bundled HTML and loads the scoped stylesheet. Future updates are made in the source files and deployed by replacing the plugin with the regenerated ZIP. The page content is maintained in `index.html` rather than native WordPress text blocks.
-
-The PHP wrapper still needs a runtime check on WordPress. Theme-specific spacing may need adjustment there.
+Wrapping flex layouts, an auto-fitting card grid, and fluid spacing allow the page to adapt without media queries. Narrow containers stack the cards and columns. Methods use native HTML `details`/`summary` controls and their browser disclosure markers; they require no scripts. The skip link is always visible, and browser keyboard-focus indicators remain available. Decorative CSS connectors and custom hover/open-state effects were removed because inline styles cannot express pseudo-elements, pseudo-classes, or media queries.
 
 ## Content to add later
 
-- Supervisor's name.
-- Project-plan PDF: upload it to the WordPress Media Library and replace the `pending-download` span with an anchor pointing to its uploaded URL.
+- Project-plan PDF: upload it to the WordPress Media Library and replace the `pending-download` span with an anchor pointing to the uploaded URL, retaining its inline style.
 - Measured evaluation results and demonstration video.
 
 The React/Next.js references in the planned-tools table describe the investment-assistant research platform, not this project webpage.
